@@ -25,7 +25,7 @@ Minimum requirements
 
     V8 releases are published rather quickly and the V8 team usually provides security support
     for the version line shipped with the Chrome browser (stable channel) and newer (only).
-    For a version overview see https://omahaproxy.appspot.com/.
+    For a version overview see https://chromiumdash.appspot.com/branches.
 
 - PHP 8.0.0+
 
