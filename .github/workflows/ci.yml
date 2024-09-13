@@ -26,6 +26,19 @@ jobs:
         with:
           submodules: true
           
+      - name: Setup PHP ${{ matrix.version }}
+        id: setup-php-sdk
+        uses: php/setup-php-sdk@v0.8
+        with:
+          version: ${{matrix.version}}
+          arch: ${{matrix.arch}}
+          ts: ${{matrix.ts}}
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.arch}}
+          toolset: ${{steps.setup-php-sdk.outputs.toolset}}
+
       - name: Checkout v8 depot_tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
@@ -47,18 +60,6 @@ jobs:
           msbuild all.sln
           unittests
           
-      - name: Setup PHP ${{ matrix.version }}
-        id: setup-php-sdk
-        uses: php/setup-php-sdk@v0.8
-        with:
-          version: ${{matrix.version}}
-          arch: ${{matrix.arch}}
-          ts: ${{matrix.ts}}
-      - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: ${{matrix.arch}}
-          toolset: ${{steps.setup-php-sdk.outputs.toolset}}
       - name: Build v8js
         run: |
           phpize
