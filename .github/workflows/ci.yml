@@ -1,18 +1,15 @@
-name: PHP Composer
-
+name: Build and Test
 on:
   push:
     branches: [ "build-windows" ]
   pull_request:
     branches: [ "build-windows" ]
-
 permissions:
   contents: read
 
 jobs:
   windows:
-
-    runs-on: windows-latest
+    runs-on: windows-2022
     continue-on-error: false
     strategy:
       fail-fast: false
@@ -23,7 +20,7 @@ jobs:
     steps:
       - name: Configure Git
         run: git config --global core.autocrlf false
-      - name: Checkout mailparse
+      - name: Checkout v8js
         uses: actions/checkout@v4
         with:
           submodules: true
@@ -51,7 +48,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mailparse-${{matrix.version}}-${{matrix.arch}}-${{matrix.ts}}
+          name: v8js-${{matrix.version}}-${{matrix.arch}}-${{matrix.ts}}
           path: binaries
       - name: test
-        run: nmake test TESTS="-d extension=${{steps.setup-php-sdk.outputs.prefix}}\ext\php_v8js.dll --show-diff tests"
+        run: nmake test TESTS="--show-diff tests"
