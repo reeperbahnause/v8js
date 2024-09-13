@@ -27,11 +27,14 @@ jobs:
           submodules: true
           
       - name: Checkout v8 depot_tools
-        uses: actions/checkout@v4
-        with:
-          github-server-url: 'https://chromium.googlesource.com/chromium'
-          repository: tools/depot_tools
-          path: depot_tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
+          $env:Path += ';' + $($pwd.Path)
+          $env:GYP_MSVS_VERSION=2015
+          $env:GYP_CHROMIUM_NO_ACTION=0
+          cd chromium_depot_tools
+          fetch v8
+          git stash
           
       - name: Setup PHP ${{ matrix.version }}
         id: setup-php-sdk
