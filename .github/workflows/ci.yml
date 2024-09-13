@@ -20,10 +20,18 @@ jobs:
     steps:
       - name: Configure Git
         run: git config --global core.autocrlf false
+        
       - name: Checkout v8js
         uses: actions/checkout@v4
         with:
           submodules: true
+          
+      - name: Checkout v8 depot_tools
+        uses: actions/checkout@v4
+        with:
+          repository: https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          path: depot_tools
+          
       - name: Setup PHP ${{ matrix.version }}
         id: setup-php-sdk
         uses: php/setup-php-sdk@v0.8
