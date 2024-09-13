@@ -2,38 +2,56 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ "php8" ]
+    branches: [ "build-windows" ]
   pull_request:
-    branches: [ "php8" ]
+    branches: [ "build-windows" ]
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  windows:
 
-    runs-on: ubuntu-latest
-
+    runs-on: windows-latest
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+          version: ["7.4", "8.0", "8.1", "8.2", "8.3"]
+          arch: [x64, x86]
+          ts: [nts, ts]
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
+      - name: Configure Git
+        run: git config --global core.autocrlf false
+      - name: Checkout mailparse
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup PHP ${{ matrix.version }}
+        id: setup-php-sdk
+        uses: php/setup-php-sdk@v0.8
+        with:
+          version: ${{matrix.version}}
+          arch: ${{matrix.arch}}
+          ts: ${{matrix.ts}}
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.arch}}
+          toolset: ${{steps.setup-php-sdk.outputs.toolset}}
+      - name: Build v8js for Windows
+        run: |
+          phpize
+          ./configure --enable-mailparse --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+          nmake
+      - name: package
+        run: |
+          md binaries
+          Get-ChildItem -Recurse -Filter "php_v8js.dll" | ForEach-Object {Copy-Item -Path $_.FullName -Destination "binaries"}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mailparse-${{matrix.version}}-${{matrix.arch}}-${{matrix.ts}}
+          path: binaries
+      - name: test
+        run: nmake test TESTS="-d extension=${{steps.setup-php-sdk.outputs.prefix}}\ext\php_v8js.dll --show-diff tests"
