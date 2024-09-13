@@ -39,7 +39,7 @@ jobs:
       - name: Build v8js for Windows
         run: |
           phpize
-          ./configure --disable-all --enable-cli --with-v8js
+          ./configure --with-v8js
           nmake
       - name: package
         run: |
