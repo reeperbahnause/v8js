@@ -31,6 +31,7 @@ jobs:
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
           $env:Path += ';' + $($pwd.Path)
           $env:GYP_MSVS_VERSION=2015
+          $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
           $env:GYP_CHROMIUM_NO_ACTION=0
           cd chromium_depot_tools
           ./fetch v8
