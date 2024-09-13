@@ -29,7 +29,8 @@ jobs:
       - name: Checkout v8 depot_tools
         uses: actions/checkout@v4
         with:
-          repository: https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          github-server-url: 'https://chromium.googlesource.com/chromium'
+          repository: tools/depot_tools
           path: depot_tools
           
       - name: Setup PHP ${{ matrix.version }}
