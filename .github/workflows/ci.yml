@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          version: ["7.4", "8.0", "8.1", "8.2", "8.3"]
-          arch: [x64, x86]
+          version: ["8.1", "8.3"]
+          arch: [x64]
           ts: [nts, ts]
     steps:
       - name: Configure Git
@@ -42,7 +42,7 @@ jobs:
       - name: Build v8js for Windows
         run: |
           phpize
-          ./configure --enable-mailparse --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+          ./configure --enable-v8js --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
           nmake
       - name: package
         run: |
