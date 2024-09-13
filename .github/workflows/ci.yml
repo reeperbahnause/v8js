@@ -40,7 +40,7 @@ jobs:
         run: |
           # phpize
           # ./configure --enable-v8js --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
-          buildconf
+          ./buildconf
           ./configure --disable-all --enable-cli --with-v8js
           nmake
       - name: package
