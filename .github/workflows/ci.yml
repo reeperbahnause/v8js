@@ -38,8 +38,10 @@ jobs:
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
       - name: Build v8js
         run: |
-          phpize
-          ./configure --enable-v8js --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+          # phpize
+          # ./configure --enable-v8js --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+          buildconf
+          ./configure --disable-all --enable-cli --with-v8js
           nmake
       - name: package
         run: |
