@@ -36,10 +36,10 @@ jobs:
         with:
           arch: ${{matrix.arch}}
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
-      - name: Build v8js for Windows
+      - name: Build v8js
         run: |
           phpize
-          ./configure --with-v8js
+          ./configure --enable-v8js --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
           nmake
       - name: package
         run: |
