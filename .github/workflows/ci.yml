@@ -49,13 +49,11 @@ jobs:
           set GYP_CHROMIUM_NO_ACTION=0
           set xn={{matrix.arch}}
           cd chromium_depot_tools
-          # gclient.bat sync --force
           fetch.bat v8
           git.bat stash
           cd v8
           ..\git.bat checkout 7.0.276.11
           ..\git.bat pull
-          # ..\gclient.bat sync --force
           ..\gn.bat gen v7.0\%xn%.release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=%xn%" --ide=vs
           cd v7.0\%xn%.release
           msbuild all.sln /t:clean
