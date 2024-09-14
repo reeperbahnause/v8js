@@ -47,7 +47,7 @@ jobs:
           set GYP_MSVS_VERSION=2015
           set DEPOT_TOOLS_WIN_TOOLCHAIN=0
           set GYP_CHROMIUM_NO_ACTION=0
-          set xn=${{matrix.arch}}
+          set xn={{matrix.arch}}
           cd chromium_depot_tools
           # gclient.bat sync --force
           fetch.bat v8
