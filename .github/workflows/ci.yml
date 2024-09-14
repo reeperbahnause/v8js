@@ -42,6 +42,7 @@ jobs:
       - name: Checkout v8 depot_tools
         shell: cmd
         run: |
+          @echo on
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
           set PATH=%cd%;%PATH%
           set GYP_MSVS_VERSION=2015
@@ -55,7 +56,8 @@ jobs:
           where python
           ..\git.bat checkout 7.0.276.11
           ..\gclient.bat sync
-          ..\gn.bat gen v7.0\%xn%.release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=%xn%" --ide=vs
+          ..\python3.bat tools\dev\gm.py x64.debug
+          REM ..\gn.bat gen v7.0\%xn%.release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=%xn%" --ide=vs
           cd v7.0\%xn%.release
           msbuild all.sln /t:clean
           msbuild all.sln
