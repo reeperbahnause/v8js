@@ -50,6 +50,7 @@ jobs:
           set GYP_CHROMIUM_NO_ACTION=0
           set xn={{matrix.arch}}
           cd chromium_depot_tools
+          gclient
           cp python3.bat python.bat
           fetch.bat v8
           git.bat stash
