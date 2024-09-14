@@ -40,25 +40,49 @@ jobs:
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
 
       - name: Checkout v8 depot_tools
+        shell: cmd
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
-          $env:Path += ';' + $($pwd.Path)
-          $env:GYP_MSVS_VERSION=2015
-          $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
-          $env:GYP_CHROMIUM_NO_ACTION=0
-          $env:xn='${{matrix.arch}}'
+          set PATH=%PATH%;%cd%
+          set GYP_MSVS_VERSION=2015
+          set DEPOT_TOOLS_WIN_TOOLCHAIN=0
+          set GYP_CHROMIUM_NO_ACTION=0
+          set xn=${{matrix.arch}}
           cd chromium_depot_tools
-          ./fetch v8
-          ./git stash
+          gclient
+          fetch.bat v8
+          git.bat stash
           cd v8
-          ../git checkout 7.0.276.11
-          ../git pull
-          ../gclient sync
-          ../gn gen v7.0\$($env:xn).release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=\"$($env:xn)\"" --ide=vs
-          cd v7.0\$($env:xn).release
+          ../git.bat checkout 7.0.276.11
+          ../git.bat pull
+          ../gclient.bat sync
+          ../gn.bat gen v7.0\%xn%.release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=%xn%" --ide=vs
+          cd v7.0\%xn%.release
           msbuild all.sln /t:clean
           msbuild all.sln
           unittests
+
+#      - name: Checkout v8 depot_tools
+#        shell: cmd
+#        run: |
+#          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
+#          $env:Path += ';' + $($pwd.Path)
+#          $env:GYP_MSVS_VERSION=2015
+#          $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
+#          $env:GYP_CHROMIUM_NO_ACTION=0
+#          $env:xn='${{matrix.arch}}'
+#          cd chromium_depot_tools
+#         ./fetch v8
+#          ./git stash
+#          cd v8
+#          ../git checkout 7.0.276.11
+#          ../git pull
+#          ../gclient sync
+#          ../gn gen v7.0\$($env:xn).release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=\"$($env:xn)\"" --ide=vs
+#          cd v7.0\$($env:xn).release
+#          msbuild all.sln /t:clean
+#          msbuild all.sln
+#          unittests
           
       - name: Build v8js
         run: |
