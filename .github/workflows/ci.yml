@@ -49,7 +49,7 @@ jobs:
           set GYP_CHROMIUM_NO_ACTION=0
           set xn=${{matrix.arch}}
           cd chromium_depot_tools
-          gclient.bat sync --force
+          # gclient.bat sync --force
           fetch.bat v8
           git.bat stash
           cd v8
