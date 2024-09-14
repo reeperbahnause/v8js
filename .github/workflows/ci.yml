@@ -50,14 +50,13 @@ jobs:
           set GYP_CHROMIUM_NO_ACTION=0
           set xn={{matrix.arch}}
           cd chromium_depot_tools
+          cp python3.bat python.bat
           fetch.bat v8
           git.bat stash
           cd v8
-          where python
-          ..\git.bat checkout 7.0.276.11
-          ..\gclient.bat sync
-          ..\python3.bat tools\dev\gm.py x64.debug
-          REM ..\gn.bat gen v7.0\%xn%.release --args="is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false target_cpu=%xn%" --ide=vs
+          git.bat checkout 7.0.276.11
+          gclient.bat sync
+          python3.bat tools\dev\gm.py x64.debug
           cd v7.0\%xn%.release
           msbuild all.sln /t:clean
           msbuild all.sln
