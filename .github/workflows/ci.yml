@@ -58,44 +58,16 @@ jobs:
           cd v8
 
           echo ###### Fetch V8 ######
-          call fetch --nohistory v8
+          call fetch v8
           cd v8
           call git checkout 9.2.230.22
-          REM call gclient sync -D
-          REM call git apply --ignore-whitespace --verbose %GITHUB_WORKSPACE%\builders\BUILD.gn.patch
 
           echo ###### Build V8 ######
           REM call python .\tools\dev\v8gen.py x64.release -vv -- target_os="""win""" is_component_build=true use_custom_libcxx=false is_clang=true use_lld=false v8_enable_verify_heap=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
-          REM call python .\tools\dev\v8gen.py x64.release -vv
           call python3 .\tools\dev\v8gen.py x64.release -vv
 
           REM call ninja -C out.gn\x64.release -t clean
-          REM call ninja -C out.gn\x64.release v8
           call ninja -C out.gn\x64.release v8
-
-#      - name: Checkout v8 depot_tools
-#        shell: cmd
-#        run: |
-#          @echo on
-#          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git chromium_depot_tools
-#          set PATH=%cd%;%PATH%
-#          set GYP_MSVS_VERSION=2015
-#          set DEPOT_TOOLS_WIN_TOOLCHAIN=0
-#          set GYP_CHROMIUM_NO_ACTION=0
-#          set xn={{matrix.arch}}
-#          cd chromium_depot_tools
-#          gclient
-#          cp python3.bat python.bat
-#          fetch.bat v8
-#          git.bat stash
-#          cd v8
-#          git.bat checkout 7.0.276.11
-#          gclient.bat sync
-#          python3.bat tools\dev\gm.py x64.debug
-#          cd v7.0\%xn%.release
-#          msbuild all.sln /t:clean
-#          msbuild all.sln
-#          unittests
 
       - name: Build v8js
         run: |
