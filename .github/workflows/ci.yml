@@ -58,20 +58,20 @@ jobs:
           cd v8
 
           echo ###### Fetch V8 ######
-          call fetch v8
-          echo target_os = ['win'] >> .gclient
+          call fetch --nohistory v8
           cd v8
           call git checkout 9.2.230.22
-          call gclient sync -D
+          REM call gclient sync -D
           REM call git apply --ignore-whitespace --verbose %GITHUB_WORKSPACE%\builders\BUILD.gn.patch
 
           echo ###### Build V8 ######
           REM call python .\tools\dev\v8gen.py x64.release -vv -- target_os="""win""" is_component_build=true use_custom_libcxx=false is_clang=true use_lld=false v8_enable_verify_heap=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
           REM call python .\tools\dev\v8gen.py x64.release -vv
-          call python .\tools\dev\gm.py x64.release.check
+          call python3 .\tools\dev\v8gen.py x64.release -vv
 
           REM call ninja -C out.gn\x64.release -t clean
           REM call ninja -C out.gn\x64.release v8
+          call ninja -C out.gn\x64.release v8_monolith
 
 #      - name: Checkout v8 depot_tools
 #        shell: cmd
