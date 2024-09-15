@@ -71,7 +71,7 @@ jobs:
 
           REM call ninja -C out.gn\x64.release -t clean
           REM call ninja -C out.gn\x64.release v8
-          call ninja -C out.gn\x64.release v8_monolith
+          call ninja -C out.gn\x64.release v8
 
 #      - name: Checkout v8 depot_tools
 #        shell: cmd
