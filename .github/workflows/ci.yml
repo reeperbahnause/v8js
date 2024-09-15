@@ -42,6 +42,11 @@ jobs:
       - name: Checkout v8 depot_tools
         shell: cmd
         run: |
+          echo ###### Configure Git ######
+          git config --global core.autocrlf false
+          git config --global core.filemode false
+          git config --global color.ui true
+          
           echo ###### Get V8 Depot Tools ######
           powershell -command "Invoke-WebRequest https://storage.googleapis.com/chrome-infra/depot_tools.zip -O depot_tools.zip"
           7z x depot_tools.zip -o*
@@ -57,7 +62,7 @@ jobs:
           echo target_os = ['win'] >> .gclient
           cd v8
           call git checkout 9.2.230.22
-          call gclient sync
+          call gclient sync -D
           REM call git apply --ignore-whitespace --verbose %GITHUB_WORKSPACE%\builders\BUILD.gn.patch
 
           echo ###### Build V8 ######
