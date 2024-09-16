@@ -39,7 +39,7 @@ jobs:
           arch: ${{matrix.arch}}
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
 
-      - name: Checkout v8 depot_tools
+      - name: Build v8
         shell: cmd
         run: |
           echo ###### Configure Git ######
@@ -58,13 +58,14 @@ jobs:
           cd v8
 
           echo ###### Fetch V8 ######
-          call fetch --nohistory v8
+          REM call fetch --nohistory v8
+          call fetch v8
           cd v8
           call git checkout 12.0.174
 
           echo ###### Build V8 ######
           REM call python .\tools\dev\v8gen.py x64.release -vv -- target_os="""win""" is_component_build=true use_custom_libcxx=false is_clang=true use_lld=false v8_enable_verify_heap=false v8_enable_i18n_support=true v8_use_external_startup_data=false symbol_level=0
-          call python3 .\tools\dev\v8gen.py x64.release -vv
+          call python3 .\tools\dev\v8gen.py x64.release -vv -- is_component_build=true is_debug=false v8_use_snapshot=false enable_nacl=false
 
           REM call ninja -C out.gn\x64.release -t clean
           call ninja -C out.gn\x64.release v8
